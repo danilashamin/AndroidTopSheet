@@ -8,4 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="TopSheetDialog" parent="Theme.Design.TopSheetDialog">
+        <item name="android:windowBackground">@color/colorAccent</item>
+    </style>
 </resources>

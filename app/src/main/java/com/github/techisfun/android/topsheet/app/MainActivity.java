@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openTopSheetDialog(View view) {
-        TopSheetDialog dialog = new TopSheetDialog(this);
+        TopSheetDialog dialog = new TopSheetDialog(this, R.style.TopSheetDialog);
         dialog.setContentView(R.layout.sheet_content);
         dialog.show();
     }
