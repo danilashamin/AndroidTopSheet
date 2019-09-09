@@ -1,7 +1,9 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
+apply plugin: 'com.github.dcendents.android-maven'
+
 
 group='com.github.danilashamin'
+version = 1.0
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -23,7 +25,12 @@ android {
 
 repositories {
     mavenCentral()
+    google()
+    jcenter()
+    maven { url "https://jitpack.io" }
 }
+
+
 
 dependencies {
     testImplementation 'junit:junit:4.12'
