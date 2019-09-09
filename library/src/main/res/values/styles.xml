@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Animation.Design.TopSheetDialog" parent="Animation.AppCompat.Dialog">
         <item name="android:windowEnterAnimation">@anim/top_sheet_slide_in</item>
@@ -8,7 +8,7 @@
 
     <style name="Widget.Design.TopSheet.Modal" parent="android:Widget">
         <item name="android:background">?android:attr/colorBackground</item>
-        <item name="android:elevation">@dimen/top_sheet_modal_elevation</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/top_sheet_modal_elevation</item>
         <item name="behavior_peekHeight">@dimen/top_sheet_modal_peek_height</item>
         <item name="behavior_hideable">true</item>
     </style>

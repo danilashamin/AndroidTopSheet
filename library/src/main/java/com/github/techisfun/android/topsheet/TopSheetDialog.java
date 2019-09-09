@@ -16,19 +16,20 @@ package com.github.techisfun.android.topsheet;
  */
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.StyleRes;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.AppCompatDialog;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
+import androidx.appcompat.app.AppCompatDialog;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 /**
  * Created by andrea on 23/08/16.
@@ -83,7 +84,7 @@ public class TopSheetDialog extends AppCompatDialog {
         if (layoutResId != 0 && view == null) {
             view = getLayoutInflater().inflate(layoutResId, coordinator, false);
         }
-        FrameLayout topSheet = (FrameLayout) coordinator.findViewById(R.id.design_top_sheet);
+        FrameLayout topSheet = coordinator.findViewById(R.id.design_top_sheet);
         topSheetBehavior = TopSheetBehavior.from(topSheet);
         topSheetBehavior.setTopSheetCallback(mTopSheetCallback);
         if (params == null) {

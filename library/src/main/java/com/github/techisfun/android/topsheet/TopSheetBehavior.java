@@ -21,23 +21,21 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.os.ParcelableCompat;
-import android.support.v4.os.ParcelableCompatCreatorCallbacks;
-import android.support.v4.view.AbsSavedState;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.NestedScrollingChild;
-import android.support.v4.view.VelocityTrackerCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
+import android.view.AbsSavedState;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.NestedScrollingChild;
+import androidx.core.view.VelocityTrackerCompat;
+import androidx.core.view.ViewCompat;
+import androidx.customview.widget.ViewDragHelper;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -178,12 +176,12 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
     }
 
     @Override
-    public Parcelable onSaveInstanceState(CoordinatorLayout parent, V child) {
+    public Parcelable onSaveInstanceState(@NonNull CoordinatorLayout parent, @NonNull V child) {
         return new SavedState(super.onSaveInstanceState(parent, child), mState);
     }
 
     @Override
-    public void onRestoreInstanceState(CoordinatorLayout parent, V child, Parcelable state) {
+    public void onRestoreInstanceState(@NonNull CoordinatorLayout parent, @NonNull V child, @NonNull Parcelable state) {
         SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(parent, child, ss.getSuperState());
         // Intermediate states are restored as collapsed state
@@ -195,7 +193,7 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
     }
 
     @Override
-    public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
+    public boolean onLayoutChild(@NonNull CoordinatorLayout parent, @NonNull V child, int layoutDirection) {
         if (ViewCompat.getFitsSystemWindows(parent) && !ViewCompat.getFitsSystemWindows(child)) {
             ViewCompat.setFitsSystemWindows(child, true);
         }
@@ -224,11 +222,11 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
     }
 
     @Override
-    public boolean onInterceptTouchEvent(CoordinatorLayout parent, V child, MotionEvent event) {
+    public boolean onInterceptTouchEvent(@NonNull CoordinatorLayout parent, V child, @NonNull MotionEvent event) {
         if (!child.isShown()) {
             return false;
         }
-        int action = MotionEventCompat.getActionMasked(event);
+        int action = event.getActionMasked();
         // Record the velocity
         if (action == MotionEvent.ACTION_DOWN) {
             reset();
@@ -274,13 +272,16 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
     }
 
     @Override
-    public boolean onTouchEvent(CoordinatorLayout parent, V child, MotionEvent event) {
+    public boolean onTouchEvent(@NonNull CoordinatorLayout parent, V child, @NonNull MotionEvent event) {
         if (!child.isShown()) {
             return false;
         }
-        int action = MotionEventCompat.getActionMasked(event);
+        int action = event.getActionMasked();
         if (mState == STATE_DRAGGING && action == MotionEvent.ACTION_DOWN) {
             return true;
+        }
+        if (mViewDragHelper == null) {
+            mViewDragHelper = ViewDragHelper.create(parent, mDragCallback);
         }
         mViewDragHelper.processTouchEvent(event);
         // Record the velocity
@@ -301,17 +302,17 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
         return !mIgnoreEvents;
     }
 
-    @Override
-    public boolean onStartNestedScroll(CoordinatorLayout coordinatorLayout, V child,
-                                       View directTargetChild, View target, int nestedScrollAxes) {
-        mLastNestedScrollDy = 0;
-        mNestedScrolled = false;
-        return (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
-    }
 
     @Override
-    public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, V child, View target, int dx,
-                                  int dy, int[] consumed) {
+    public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
+        mLastNestedScrollDy = 0;
+        mNestedScrolled = false;
+        return (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
+    }
+
+
+    @Override
+    public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
         View scrollingChild = mNestedScrollingChildRef.get();
         if (target != scrollingChild) {
             return;
@@ -348,7 +349,7 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
     }
 
     @Override
-    public void onStopNestedScroll(CoordinatorLayout coordinatorLayout, V child, View target) {
+    public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int type) {
         if (child.getTop() == mMaxOffset) {
             setStateInternal(STATE_EXPANDED);
             return;
@@ -387,7 +388,7 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
     }
 
     @Override
-    public boolean onNestedPreFling(CoordinatorLayout coordinatorLayout, V child, View target,
+    public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target,
                                     float velocityX, float velocityY) {
         return target == mNestedScrollingChildRef.get() &&
                 (mState != STATE_EXPANDED ||
@@ -572,7 +573,7 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
     private final ViewDragHelper.Callback mDragCallback = new ViewDragHelper.Callback() {
 
         @Override
-        public boolean tryCaptureView(View child, int pointerId) {
+        public boolean tryCaptureView(@NonNull View child, int pointerId) {
             if (mState == STATE_DRAGGING) {
                 return false;
             }
@@ -590,7 +591,7 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
         }
 
         @Override
-        public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
+        public void onViewPositionChanged(@NonNull View changedView, int left, int top, int dx, int dy) {
             dispatchOnSlide(top);
         }
 
@@ -602,7 +603,7 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
         }
 
         @Override
-        public void onViewReleased(View releasedChild, float xvel, float yvel) {
+        public void onViewReleased(@NonNull View releasedChild, float xvel, float yvel) {
             int top;
             @State int targetState;
             if (yvel > 0) { // Moving up
@@ -634,7 +635,7 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
         }
 
         @Override
-        public int clampViewPositionVertical(View child, int top, int dy) {
+        public int clampViewPositionVertical(@NonNull View child, int top, int dy) {
             return constrain(top, mHideable ? -child.getHeight() : mMinOffset, mMaxOffset);
         }
 
@@ -644,7 +645,7 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
         }
 
         @Override
-        public int getViewVerticalDragRange(View child) {
+        public int getViewVerticalDragRange(@NonNull View child) {
             if (mHideable) {
                 return child.getHeight();
             } else {
@@ -692,12 +693,7 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
         final int state;
 
         public SavedState(Parcel source) {
-            this(source, null);
-        }
-
-        public SavedState(Parcel source, ClassLoader loader) {
-            super(source, loader);
-            //noinspection ResourceType
+            super(source);
             state = source.readInt();
         }
 
@@ -712,18 +708,20 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
             out.writeInt(state);
         }
 
-        public static final Creator<SavedState> CREATOR = ParcelableCompat.newCreator(
-                new ParcelableCompatCreatorCallbacks<SavedState>() {
-                    @Override
-                    public SavedState createFromParcel(Parcel in, ClassLoader loader) {
-                        return new SavedState(in, loader);
-                    }
+        public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
 
-                    @Override
-                    public SavedState[] newArray(int size) {
-                        return new SavedState[size];
-                    }
-                });
+            @Override
+            public SavedState createFromParcel(Parcel parcel) {
+                return new SavedState(parcel);
+            }
+
+            @Override
+            public SavedState[] newArray(int i) {
+                return new SavedState[0];
+            }
+        };
+
+
     }
 
     /**
