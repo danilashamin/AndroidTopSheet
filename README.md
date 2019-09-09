@@ -1,7 +1,7 @@
-TopSheet - a "top" version of BottomSheet
+TopSheet - a "top" version of BottomSheet. This is fork from original repository by TechIsFun.
 =========================================
 
-[![Release](https://jitpack.io/v/TechIsFun/AndroidTopSheet.svg)](https://jitpack.io/#TechIsFun/AndroidTopSheet)
+[![](https://jitpack.io/v/danilashamin/AndroidTopSheet.svg)](https://jitpack.io/#danilashamin/AndroidTopSheet)
 
 TopSheetBehaviour
 -----
