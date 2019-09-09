@@ -140,6 +140,14 @@ public class TopSheetDialog extends AppCompatDialog {
         return themeId;
     }
 
+    public void setHasOffset(boolean hasOffset) {
+        topSheetBehavior.setHasOffset(hasOffset);
+    }
+
+    public boolean getHasOffset() {
+        return topSheetBehavior.isHasOffset();
+    }
+
     private TopSheetBehavior.TopSheetCallback mTopSheetCallback
             = new TopSheetBehavior.TopSheetCallback() {
         @Override

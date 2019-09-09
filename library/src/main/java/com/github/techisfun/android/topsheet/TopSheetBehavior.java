@@ -43,10 +43,18 @@ import java.lang.ref.WeakReference;
 
 
 /**
- * An interaction behavior plugin for a child view of {@link CoordinatorLayout} to make it work as
+ * An interaction behavior plugin for a child view of {@link CoordinatorLayout} to inOffake it work as
  * a bottom sheet.
  */
 public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior<V> {
+
+    public boolean isHasOffset() {
+        return hasOffset;
+    }
+
+    public void setHasOffset(boolean hasOffset) {
+        this.hasOffset = hasOffset;
+    }
 
     /**
      * Callback for monitoring events about bottom sheets.
@@ -149,6 +157,8 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
 
     private boolean mTouchingScrollingChild;
 
+    private boolean hasOffset;
+
     /**
      * Default constructor for instantiating TopSheetBehaviors.
      */
@@ -202,7 +212,11 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
         parent.onLayoutChild(child, layoutDirection);
         // Offset the bottom sheet
         mParentHeight = parent.getHeight();
-        mMinOffset = Math.max(-child.getHeight(), -(child.getHeight() - mPeekHeight));
+        if (hasOffset) {
+            mMinOffset = Math.max(-child.getHeight(), -(child.getHeight() - mPeekHeight));
+        } else {
+            mMinOffset = 0;
+        }
         mMaxOffset = 0;
         if (mState == STATE_EXPANDED) {
             ViewCompat.offsetTopAndBottom(child, mMaxOffset);
@@ -406,7 +420,11 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
         mPeekHeight = Math.max(0, peekHeight);
 //        mMaxOffset = mParentHeight - peekHeight;
         if (mViewRef != null && mViewRef.get() != null) {
-            mMinOffset = Math.max(-mViewRef.get().getHeight(), -(mViewRef.get().getHeight() - mPeekHeight));
+            if(hasOffset){
+                mMinOffset = Math.max(-mViewRef.get().getHeight(), -(mViewRef.get().getHeight() - mPeekHeight));
+            } else {
+                mMinOffset = 0;
+            }
         }
     }
 
