@@ -38,5 +38,6 @@ ext {
     // android
     appcompat = 'androidx.appcompat:appcompat:1.1.0-rc01'
     design = 'com.google.android.material:material:1.0.0'
+    var = '1.1.0-rc01'
 
 }

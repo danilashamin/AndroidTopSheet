@@ -36,30 +36,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation rootProject.ext.design
     implementation rootProject.ext.appcompat
+    implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0-beta01'
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from android.sourceSets.main.java.sourceFiles
-}
-
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.sourceFiles
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-task classesJar(type: Jar) {
-    from "$buildDir/intermediates/classes/release"
-}
-
-artifacts {
-    archives classesJar
-    archives javadocJar
-    archives sourcesJar
 }

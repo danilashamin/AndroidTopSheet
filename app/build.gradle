@@ -22,6 +22,7 @@ android {
 dependencies {
     implementation project(":library")
     testImplementation 'junit:junit:4.12'
-    implementation rootProject.ext.appcompat
+    implementation "androidx.appcompat:appcompat:1.1.0"
+    implementation 'androidx.annotation:annotation:1.1.0'
     implementation rootProject.ext.design
 }

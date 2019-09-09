@@ -195,7 +195,7 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
     @Override
     public boolean onLayoutChild(@NonNull CoordinatorLayout parent, @NonNull V child, int layoutDirection) {
         if (ViewCompat.getFitsSystemWindows(parent) && !ViewCompat.getFitsSystemWindows(child)) {
-            ViewCompat.setFitsSystemWindows(child, true);
+            child.setFitsSystemWindows(true);
         }
         int savedTop = child.getTop();
         // First let the parent lay it out
